@@ -24,6 +24,20 @@ def create_task():
     TASKS.append(task)
     return jsonify(task), 201
 
+@app.route("/tasks/<int:task_id>", methods=["PUT"])
+def update_task(task_id):
+    data = request.get_json()
+    if not data:
+        return jsonify({"error": "request body required"}), 400
+    for task in TASKS:
+        if task["id"] == task_id:
+            if "title" in data:
+                task["title"] = data["title"]
+            if "done" in data:
+                task["done"] = bool(data["done"])
+            return jsonify(task), 200
+    return jsonify({"error": "task not found"}), 404
+
 @app.route("/tasks/<int:task_id>", methods=["DELETE"])
 def delete_task(task_id):
     for i, task in enumerate(TASKS):
