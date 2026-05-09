@@ -23,3 +23,11 @@ def create_task():
     task = {"id": len(TASKS) + 1, "title": data["title"], "done": False}
     TASKS.append(task)
     return jsonify(task), 201
+
+@app.route("/tasks/<int:task_id>", methods=["DELETE"])
+def delete_task(task_id):
+    for i, task in enumerate(TASKS):
+        if task["id"] == task_id:
+            TASKS.pop(i)
+            return "", 204
+    return jsonify({"error": "task not found"}), 404
